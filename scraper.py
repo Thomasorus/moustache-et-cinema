@@ -45,6 +45,6 @@ for item in all_movies:
 start = open("partials/start.txt", "r")
 end = open("partials/end.txt", "r")
 complete = start.read() + content + end.read()
-f = open("index.html", "w")
+f = open("docs/index.html", "w")
 f.write(complete)
 f.close()
