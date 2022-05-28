@@ -1,1 +1,1 @@
-pip3 install BeautifulSoup && python3 scraper.py
+pip3 install BeautifulSoup && chmod +x scraper.py && python3 scraper.py
