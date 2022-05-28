@@ -1,0 +1,1 @@
+pip3 install BeautifulSoup && python3 scraper.py
