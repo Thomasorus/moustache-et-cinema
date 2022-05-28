@@ -1,5 +1,6 @@
 import os
 import requests
+import shutil
 from bs4 import BeautifulSoup
 
 path = "movies"
@@ -45,6 +46,24 @@ for item in all_movies:
 start = open("partials/start.txt", "r")
 end = open("partials/end.txt", "r")
 complete = start.read() + content + end.read()
+if os.path.exists("docs"):
+    shutil.rmtree("docs")
+
+# Make new folders
+os.makedirs("docs")
 f = open("docs/index.html", "w")
 f.write(complete)
 f.close()
+
+
+assets = os.listdir("images")
+os.makedirs("docs/images")
+if assets:
+	for asset in assets:
+	    asset = os.path.join("images/", asset)
+	    if os.path.isfile(asset):
+	        shutil.copy(asset, "docs/images/")
+else:
+    print("No assets found!")
+
+
