@@ -116,7 +116,7 @@ a {
   top: 1rem;
 }
 
-@media (max-width:  610px) {
+@media (max-width:  790px) {
   article {
     max-width: unset;
     width: 100%;
