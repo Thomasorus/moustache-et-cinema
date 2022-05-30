@@ -10,6 +10,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Generate website
         run: pip3 install beautifulsoup4 && python3 scraper.py
+      - name: Create cname file
+        run: echo 'moustache-et-cinema.fr' > docs/CNAME
       - name: Deploy to GitHub Pages
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
