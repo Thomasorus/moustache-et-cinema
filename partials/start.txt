@@ -127,8 +127,8 @@
   <body>
     <header>
       <img class="avatar" src="images/avatar.png" alt="Avatar de GKPlugInBaby">
-      <h1>Les recos ciné de <a href="https://twitter.com/GKPlugInBaby">GKPlugInBaby</a></h1>
-      <p>Le meilleur du cinéma en direct de la savoie.</p>
+      <h1>Moustache et cinéma</h1>
+      <p>Les recommandations ciné de <a href="https://twitter.com/GKPlugInBaby">GKPlugInBaby.</a></p>
       <nav>
         MENU
       </nav>
