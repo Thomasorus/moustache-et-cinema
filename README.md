@@ -1,3 +1,5 @@
-# moustache et cinema
+![Moustache et cinéma](/images/avatar.png)
 
-Un petit site de reco cinéma fait avec un script python et beautiful soup.
+# Moustache et cinema
+
+Un petit site de recos cinéma avec des fichiers texte en quelques dizaines de lignes de code.
