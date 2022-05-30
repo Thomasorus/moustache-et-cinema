@@ -16,9 +16,11 @@ sort = sorted(files)
 sort.reverse()
 
 all_movies = []
+menu = "<ul>"
 for year in filenames:
 	file = open(path + "/" + year + ".txt", "r")
 	movies_ids = file.read().split()
+	menu += "<li><a href='#" + year + "''>" + year + "</a></li>"
 
 	movies = []
 	for movie_id in movies_ids:
@@ -34,9 +36,10 @@ for year in filenames:
 	year_arr = {"year": str(year), "movies": movies}
 	all_movies.append(year_arr)
 
+menu += "</ul>"
 content = ""
 for item in all_movies:
-	content += "<section><div><div class='stick'><img class='moustache' src='images/" + item["year"] + ".png' aria-hidden='true'/>\n\t<h2>" + item["year"] + "</h2></div></div><div class='movies'>\n"
+	content += "<section><div><div class='stick'><img class='moustache' src='images/" + item["year"] + ".png' aria-hidden='true'/>\n\t<h2 id=" + item["year"] + ">" + item["year"] + "</h2></div></div><div class='movies'>\n"
 	for movie in item["movies"]:
 		movie_string = "\t<article class='flow'>\n\t\t<img loading='lazy' src='" + movie["image"] + "'' alt='" + movie["title"] + "'/>\n\t\t<h3>" + movie["title"] + "</h3>\n\t\t<p>" + movie["plot"] + "</p>\n\t\t<a href='" + movie["link"] + "'>IMDB</a>\n\t</article>\n"
 		content += movie_string
@@ -44,8 +47,10 @@ for item in all_movies:
 
 
 start = open("partials/start.txt", "r")
+start_width_menu = start.read().replace("MENU", menu)
+
 end = open("partials/end.txt", "r")
-complete = start.read() + content + end.read()
+complete = start_width_menu + content + end.read()
 if os.path.exists("docs"):
     shutil.rmtree("docs")
 
