@@ -14,15 +14,12 @@ for file in files:
 
 
 sort = sorted(files)
-print(sort)
-
 sort.reverse()
-
-print(sort)
 
 all_movies = []
 menu = "<ul>"
-for year in filenames:
+for year in sort:
+	print(year)
 	file = open(path + "/" + year + ".txt", "r")
 	movies_ids = file.read().split()
 	menu += "<li><a href='#" + year + "''>" + year + "</a></li>"
