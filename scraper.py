@@ -7,18 +7,19 @@ path = "movies"
 url = "https://www.imdb.com/title/"
 
 files = os.listdir(path)
-filenames = []
-
-for file in files:
-	filenames.append(file.replace(".txt", ""))
-
-
 sort = sorted(files)
 sort.reverse()
 
+filenames = []
+
+for file in sort:
+	filenames.append(file.replace(".txt", ""))
+
+
+
 all_movies = []
 menu = "<ul>"
-for year in sort:
+for year in filenames:
 	print(year)
 	file = open(path + "/" + year + ".txt", "r")
 	movies_ids = file.read().split()
@@ -43,6 +44,7 @@ menu += "</ul>"
 content = ""
 print(all_movies)
 for item in all_movies:
+	print(item["year"])
 	content += "<section><div><div class='stick'><img class='moustache' src='images/" + item["year"] + ".png' aria-hidden='true'/>\n\t<h2 id=" + item["year"] + ">" + item["year"] + "</h2></div></div><div class='movies'>\n"
 	for movie in item["movies"]:
 		movie_string = "\t<article class='flow'>\n\t\t<img loading='lazy' src='" + movie["image"] + "'' alt='" + movie["title"] + "'/>\n\t\t<h3>" + movie["title"] + "</h3>\n\t\t<p>" + movie["plot"] + "</p>\n\t\t<a href='" + movie["link"] + "'>IMDB</a>\n\t</article>\n"
