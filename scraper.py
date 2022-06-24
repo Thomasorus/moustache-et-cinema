@@ -12,8 +12,13 @@ filenames = []
 for file in files:
 	filenames.append(file.replace(".txt", ""))
 
+
 sort = sorted(files)
+print(sort)
+
 sort.reverse()
+
+print(sort)
 
 all_movies = []
 menu = "<ul>"
