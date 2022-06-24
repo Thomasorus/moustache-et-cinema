@@ -28,6 +28,7 @@ for year in filenames:
 		res = requests.get(link)
 		soup = BeautifulSoup(res.content, 'html.parser')
 		title = soup.find('h1')
+		print(str(title.contents[0]))
 		image = soup.find('meta', property="og:image")
 		plot = soup.find('meta', property="og:description")
 		movie = {"title": str(title.contents[0]), "image": image.get("content"), "plot": plot.get("content"), "link": link}
@@ -38,6 +39,7 @@ for year in filenames:
 
 menu += "</ul>"
 content = ""
+print(all_movies)
 for item in all_movies:
 	content += "<section><div><div class='stick'><img class='moustache' src='images/" + item["year"] + ".png' aria-hidden='true'/>\n\t<h2 id=" + item["year"] + ">" + item["year"] + "</h2></div></div><div class='movies'>\n"
 	for movie in item["movies"]:
