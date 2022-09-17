@@ -52,10 +52,10 @@ for item in all_movies:
 	content += "</div></section>"
 
 
-start = open("partials/start.txt", "r")
+start = open("partials/start.html", "r")
 start_width_menu = start.read().replace("MENU", menu)
 
-end = open("partials/end.txt", "r")
+end = open("partials/end.html", "r")
 complete = start_width_menu + content + end.read()
 if os.path.exists("docs"):
     shutil.rmtree("docs")
