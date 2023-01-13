@@ -9,6 +9,7 @@ import string
 cache_path = "cache.json"
 path = "movies"
 url = "https://www.imdb.com/title/"
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 
 cache_file = open(cache_path, "r")
 cache_text = cache_file.read()
@@ -62,7 +63,7 @@ for year in filenames:
 
         if match == False:
             link = url + movie_id
-            res = requests.get(link)
+            res = requests.get(link, headers=headers)
             soup = BeautifulSoup(res.content, "html.parser")
             title = soup.find("h1")
             print("Fetch: ", str(title.contents[0]))
