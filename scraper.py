@@ -9,7 +9,7 @@ import string
 cache_path = "cache.json"
 path = "movies"
 url = "https://www.imdb.com/title/"
-headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36', 'Accept-Language': 'fr'}
 
 cache_file = open(cache_path, "r")
 cache_text = cache_file.read()
@@ -68,7 +68,7 @@ for year in filenames:
             title = soup.find("h1")
             print("Fetch: ", str(title.contents[0]))
             image = soup.find("meta", property="og:image")
-            plot = soup.find("meta", property="og:description")
+            plot = soup.find("meta", property="twitter:image:alt")
             movie = {
                 "id": movie_id,
                 "title": str(title.contents[0]),
