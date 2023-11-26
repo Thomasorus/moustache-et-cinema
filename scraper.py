@@ -65,13 +65,13 @@ for year in filenames:
             link = url + movie_id
             res = requests.get(link, headers=headers)
             soup = BeautifulSoup(res.content, "html.parser")
-            title = soup.find("h1")
-            print("Fetch: ", str(title.contents[0]))
+            title = soup.find("h1").get_text()
+            print("Fetch: ", str(title))
             image = soup.find("meta", property="og:image")
             plot = soup.find("meta", property="twitter:image:alt")
             movie = {
                 "id": movie_id,
-                "title": str(title.contents[0]),
+                "title": str(title),
                 "image": image.get("content"),
                 "plot": plot.get("content"),
                 "link": link,
@@ -85,10 +85,7 @@ for year in filenames:
     all_movies.append(year_arr)
 
 
-cache_string = json.dumps(tmp_cache)
-new_cache = open(cache_path, "w")
-new_cache.write(cache_string)
-new_cache.close()
+
 
 menu += "</ul>"
 content = ""
@@ -139,6 +136,10 @@ f = open("docs/index.html", "w")
 f.write(complete)
 f.close()
 
+cache_string = json.dumps(all_movies)
+new_cache = open(cache_path, "w")
+new_cache.write(cache_string)
+new_cache.close()
 
 assets = os.listdir("images")
 os.makedirs("docs/images")
