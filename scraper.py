@@ -11,6 +11,9 @@ path = "movies"
 url = "https://www.imdb.com/title/"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36', 'Accept-Language': 'fr'}
 
+if not os.path.exists(cache_path):
+    cache_file = open(cache_path, "x")
+    cache_file.close()
 cache_file = open(cache_path, "r")
 cache_text = cache_file.read()
 if cache_text.strip() == "":
@@ -39,7 +42,7 @@ for year in filenames:
     print("\n" + year)
     file = open(path + "/" + year + ".txt", "r")
     movies_ids = file.read().split("\n")
-    menu += "<li><a href='#" + year + "''>" + year + "</a></li>"
+    menu += "<li><a href=\"#" + year + "\">" + year + "</a></li>"
 
     movies = []
     for movie_infos in movies_ids:
@@ -53,20 +56,21 @@ for year in filenames:
             podium = ""
         match = False
         if cache:
-            for m in cache_content:
-                if movie_id == m["id"]:
-                    print("Cached: ", m["title"])
-                    match = True
-                    movies.append(m)
-                    tmp_cache.append(m)
-                    break
+            for y in cache_content:
+                for m in y["movies"]:
+                    if movie_id == m["id"]:
+                        print("Cached:", m["title"])
+                        match = True
+                        movies.append(m)
+                        tmp_cache.append(m)
+                        break
 
         if match == False:
             link = url + movie_id
             res = requests.get(link, headers=headers)
             soup = BeautifulSoup(res.content, "html.parser")
             title = soup.find("h1").get_text()
-            print("Fetch: ", str(title))
+            print("Fetch:", str(title))
             image = soup.find("meta", property="og:image")
             plot = soup.find("meta", property="twitter:image:alt")
             movie = {
@@ -86,6 +90,8 @@ for year in filenames:
 
 
 
+# Building HTML
+print("\nBuilding HTML page")
 
 menu += "</ul>"
 content = ""
@@ -94,45 +100,47 @@ content = ""
 for item in all_movies:
     print(item["year"])
     content += (
-        "<section><div><div class='stick'><img class='moustache' src='images/"
+        "\n    <section>\n      <div>\n        <div class=\"stick\"><img class=\"moustache\" src=\"images/"
         + item["year"]
-        + ".png' aria-hidden='true'/>\n\t<h2 id="
+        + ".png\" aria-hidden=\"true\" /><h2 id="
         + item["year"]
         + ">"
         + item["year"]
-        + "</h2></div></div><div class='movies'>\n"
+        + "</h2></div>\n      </div>\n      <div class=\"movies\">\n"
     )
     for movie in item["movies"]:
         movie_string = (
-            "\t<article class='flow "
+            "        <article class=\"flow "
             + movie["podium"]
-            + "'>\n\t\t<img loading='lazy' src='"
+            + "\" id=\""
+            + movie["id"]
+            + "\">\n          <img loading=\"lazy\" src=\""
             + movie["image"]
-            + "'' alt='"
+            + "\" alt=\""
             + movie["title"]
-            + "'/>\n\t\t<h3>"
+            + "\" />\n          <h3>"
             + movie["title"]
-            + "</h3>\n\t\t<p>"
+            + "</h3>\n          <p>"
             + movie["plot"]
-            + "</p>\n\t\t<a href='"
+            + "</p>\n          <a href=\""
             + movie["link"]
-            + "'>IMDB</a>\n\t</article>\n"
+            + "\">IMDB</a>\n        </article>\n"
         )
         content += movie_string
-    content += "</div></section>"
+    content += "      </div>\n    </section>\n"
 
 
-start = open("partials/start.html", "r")
+start = open("partials/start.html", "r", encoding="utf-8")
 start_width_menu = start.read().replace("MENU", menu)
 
-end = open("partials/end.html", "r")
+end = open("partials/end.html", "r", encoding="utf-8")
 complete = start_width_menu + content + end.read()
 if os.path.exists("docs"):
     shutil.rmtree("docs")
 
 # Make new folders
 os.makedirs("docs")
-f = open("docs/index.html", "w")
+f = open("docs/index.html", "w", encoding="utf-8")
 f.write(complete)
 f.close()
 
