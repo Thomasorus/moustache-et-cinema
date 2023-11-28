@@ -6,44 +6,28 @@ import shutil
 from bs4 import BeautifulSoup
 import string
 
-cache_path = "cache.json"
+# Config
 path = "movies"
+cache_path = "cache"
 url = "https://www.imdb.com/title/"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36', 'Accept-Language': 'fr'}
 
-if not os.path.exists(cache_path):
-    cache_file = open(cache_path, "x")
-    cache_file.close()
-cache_file = open(cache_path, "r")
-cache_text = cache_file.read()
-if cache_text.strip() == "":
-    print("New cache")
-    cache = False
-else:
-    cache = True
-    cache_content = json.loads(cache_text)
-cache_file.close()
-
-
+# Years
+years = []
 files = os.listdir(path)
-sort = sorted(files)
-sort.reverse()
+files_sorted = sorted(files)
+files_sorted.reverse()
+for file in files_sorted:
+    years.append(file.replace(".txt", ""))
 
-filenames = []
-
-for file in sort:
-    filenames.append(file.replace(".txt", ""))
-
-
+# Movies
 all_movies = []
-tmp_cache = []
 menu = "<ul>"
-for year in filenames:
+for year in years:
     print("\n" + year)
     file = open(path + "/" + year + ".txt", "r")
     movies_ids = file.read().split("\n")
     menu += "<li><a href=\"#" + year + "\">" + year + "</a></li>"
-
     movies = []
     for movie_infos in movies_ids:
         if movie_infos == "":
@@ -54,18 +38,14 @@ for year in filenames:
             podium = movie_arr[1]
         else:
             podium = ""
-        match = False
-        if cache:
-            for y in cache_content:
-                for m in y["movies"]:
-                    if movie_id == m["id"]:
-                        print("Cached:", m["title"])
-                        match = True
-                        movies.append(m)
-                        tmp_cache.append(m)
-                        break
-
-        if match == False:
+        if os.path.exists("cache/" + movie_id + ".json"):
+            cache_file = open("cache/" + movie_id + ".json", "r")
+            cache_content = cache_file.read()
+            cache_array = json.loads(cache_content)
+            cache_file.close()
+            print("Cached:", cache_array["title"])
+            movies.append(cache_array)
+        else:
             link = url + movie_id
             res = requests.get(link, headers=headers)
             soup = BeautifulSoup(res.content, "html.parser")
@@ -83,20 +63,19 @@ for year in filenames:
                 "podium": podium,
             }
             movies.append(movie)
-            tmp_cache.append(movie)
-        match = False
+            cache_json = json.dumps(movie)
+            if not os.path.exists("cache"):
+                os.makedirs("cache")
+            cache_tmp = open("cache/" + movie_id + ".json", "w")
+            cache_tmp.write(cache_json)
+            cache_tmp.close()
     year_arr = {"year": str(year), "movies": movies}
     all_movies.append(year_arr)
 
-
-
 # Building HTML
 print("\nBuilding HTML page")
-
 menu += "</ul>"
 content = ""
-# print(all_movies)
-
 for item in all_movies:
     print(item["year"])
     content += (
@@ -128,27 +107,20 @@ for item in all_movies:
         )
         content += movie_string
     content += "      </div>\n    </section>\n"
-
-
 start = open("partials/start.html", "r", encoding="utf-8")
 start_width_menu = start.read().replace("MENU", menu)
-
 end = open("partials/end.html", "r", encoding="utf-8")
 complete = start_width_menu + content + end.read()
+
+# Create output
 if os.path.exists("docs"):
     shutil.rmtree("docs")
-
-# Make new folders
 os.makedirs("docs")
 f = open("docs/index.html", "w", encoding="utf-8")
 f.write(complete)
 f.close()
 
-cache_string = json.dumps(all_movies)
-new_cache = open(cache_path, "w")
-new_cache.write(cache_string)
-new_cache.close()
-
+# Copy assets
 assets = os.listdir("images")
 os.makedirs("docs/images")
 if assets:
