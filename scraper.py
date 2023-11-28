@@ -66,9 +66,9 @@ for year in years:
             cache_json = json.dumps(movie)
             if not os.path.exists("cache"):
                 os.makedirs("cache")
-            cache_tmp = open("cache/" + movie_id + ".json", "w")
-            cache_tmp.write(cache_json)
-            cache_tmp.close()
+            cache_file = open("cache/" + movie_id + ".json", "w")
+            cache_file.write(cache_json)
+            cache_file.close()
     year_arr = {"year": str(year), "movies": movies}
     all_movies.append(year_arr)
 
