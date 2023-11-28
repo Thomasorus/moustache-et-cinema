@@ -8,6 +8,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: cache/
+          key: cache
       - name: Generate website
         run: pip3 install beautifulsoup4 && python3 scraper.py
       - name: Create cname file
